@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,65 +16,77 @@ class MyApp extends StatelessWidget {
 }
 
 class PantallaPrincipal extends StatelessWidget {
+  const PantallaPrincipal({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(         
         title: const Center(
-          child: Text('Actividad de Widgets'),
+          child: Text('Vinil Sentimental'),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.menu),
+            tooltip: 'Menu',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Aquí se mostraría el menú de navegación')),
+              );
+            },
+          ),
+        ],
       ),
-      body: Column(
-        children: [
-          // CONTAINER + TEXT
-          Container(
-            padding: EdgeInsets.all(16.0),
-            color: Colors.blue,
-            child: Text(
-              'Texto de prueba dentro de una columna',
-              style: TextStyle(fontSize: 24, color: Colors.white),
-            ),
-          ),
 
-          // ROW
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Icon(Icons.home, size: 50),
-              Icon(Icons.search, size: 50),
-              Icon(Icons.settings, size: 50),
-              Icon(Icons.account_circle, size: 50),
-            ],
-          ),
 
-          // STACK
-          Expanded(
-            child: Stack(
+      body: Stack(
+         children: [
+                    // Fondo
+                    Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            'https://planisferio.com.mx/wp-content/uploads/2025/08/mujer-cubrio-cara-disco-vinilo-retro-entonado_77190-7218.jpg',
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  color: Colors.purple[800],
-                ),
-                Positioned(
-                  top: 50,
-                  left: 50,
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    color: Colors.green[400],
+                const Icon(Icons.music_note, size: 50, color: Colors.white),
+                const SizedBox(height: 16),
+                const Text(
+                  '¡Bienvenido a Vinil Sentimental!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,                    
                   ),
                 ),
-                Positioned(
-                  bottom: 50,
-                  right: 50,
+                SizedBox(height: 20),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    
+                  ),
+                  onPressed: () {
+                    print('Agregar vinil');
+                  },
                   child: Text(
-                    'Stack de prueba',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                    'Agregar nuevo vinil',
+                    style: TextStyle(fontSize: 18, color: Colors.blue),
                   ),
-                )
+                ),
               ],
             ),
           ),
-        ],
+        ],                
       ),
     );
   }
