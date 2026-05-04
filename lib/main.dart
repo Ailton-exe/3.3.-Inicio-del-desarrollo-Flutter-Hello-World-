@@ -1,92 +1,88 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: PantallaPrincipal(),
+      debugShowCheckedModeBanner: false,
+      home: PantallaClima(),
     );
   }
 }
 
-class PantallaPrincipal extends StatelessWidget {
-  const PantallaPrincipal({super.key});
+// 🔹 FUNCIÓN HTTP
+Future<Map<String, dynamic>> obtenerClima(String ciudad) async {
+  final apiKey = "3de8ef278e5b2b67e30c4b14f33ce5f7"; // 👈 PON AQUÍ TU API KEY
+
+  final url = Uri.parse(
+    "https://api.openweathermap.org/data/2.5/weather?q=$ciudad&appid=$apiKey&units=metric&lang=es"
+  );
+
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception("Error al obtener el clima");
+  }
+}
+
+// 🔹 PANTALLA PRINCIPAL
+class PantallaClima extends StatefulWidget {
+  @override
+  _PantallaClimaState createState() => _PantallaClimaState();
+}
+
+class _PantallaClimaState extends State<PantallaClima> {
+  String ciudad = "Guadalajara";
+  String resultado = "Presiona el botón para consultar el clima";
+
+  void consultarClima() async {
+    try {
+      final data = await obtenerClima(ciudad);
+
+      setState(() {
+        resultado =
+            "${data['name']}\n${data['main']['temp']}°C\n${data['weather'][0]['description']}";
+      });
+    } catch (e) {
+      setState(() {
+        resultado = "Error al obtener datos";
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(         
-        title: const Center(
-          child: Text('Vinil Sentimental'),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.menu),
-            tooltip: 'Menu',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Aquí se mostraría el menú de navegación')),
-              );
-            },
-          ),
-        ],
+      appBar: AppBar(
+        title: Text("Clima con API"),
       ),
-
-
-      body: Stack(
-         children: [
-                    // Fondo
-                    Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            'https://planisferio.com.mx/wp-content/uploads/2025/08/mujer-cubrio-cara-disco-vinilo-retro-entonado_77190-7218.jpg',
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.music_note, size: 50, color: Colors.white),
-                const SizedBox(height: 16),
-                const Text(
-                  '¡Bienvenido a Vinil Sentimental!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,                    
-                  ),
-                ),
-                SizedBox(height: 20),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    
-                  ),
-                  onPressed: () {
-                    print('Agregar vinil');
-                  },
-                  child: Text(
-                    'Agregar nuevo vinil',
-                    style: TextStyle(fontSize: 18, color: Colors.blue),
-                  ),
-                ),
-              ],
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              resultado,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 22),
             ),
-          ),
-        ],                
+
+            SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: consultarClima,
+              child: Text("Consultar clima"),
+            ),
+          ],
+        ),
       ),
     );
   }
