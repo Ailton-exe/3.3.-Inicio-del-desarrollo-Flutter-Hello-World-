@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "86231630171",
+    "project_id": "diseno-apps-moviles-ailton-37",
+    "storage_bucket": "diseno-apps-moviles-ailton-37.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86231630171:android:40beb757e3c825b93a9a7e",
+        "android_client_info": {
+          "package_name": "com.example.hello_world"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKTePgVXGNtAeJj9HZh4hgkP9bUlsJCWs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
